@@ -37,3 +37,28 @@ Spotify API → Amazon CloudWatch → Python (AWS Lambda) → AWS EMR → AWS S3
 - Snowflake & Snowpipe
 - Power BI
 
+---
+
+## Project Structure
+
+```
+spotify-data-pipeline/
+│── scripts/
+│   ├── extract_spotify_data.py  # Fetches data from Spotify API
+│   ├── process_spotify_data.py  # Runs ETL on AWS Glue / EMR
+│   ├── config.py                # Stores API keys and AWS credentials
+│── data/
+│   ├── raw/                     # Raw Spotify data in JSON/CSV format
+│   ├── processed/               # Transformed data (Parquet/CSV)
+│── notebooks/
+│   ├── exploratory_analysis.ipynb  # Jupyter Notebook for analysis
+│── README.md                     # Project Documentation
+│── requirements.txt               # Python dependencies
+│── .gitignore                     # Files to ignore in GitHub repo
+
+```
+
+## 📢 Future Enhancements
+- ✅ Integrate real-time streaming with Kafka.
+- ✅ Add Airflow for job orchestration.
+- ✅ Deploy a dashboard with Power BI / Tableau.
