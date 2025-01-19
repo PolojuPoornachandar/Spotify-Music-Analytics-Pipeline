@@ -54,7 +54,7 @@ This architecture extracts, transforms, and loads (ETL) data from the **Spotify 
 ## **Architecture Diagram**
 Below is the architecture diagram representing the ETL workflow:
 
-![AWS ETL Architecture](sandbox:/mnt/data/hd_image.png)
+![hd_image](https://github.com/user-attachments/assets/51e03c64-5d6d-4713-98c2-4846afca0e5f)
 
 ---
 
