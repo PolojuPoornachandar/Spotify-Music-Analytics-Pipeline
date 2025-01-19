@@ -1,64 +1,63 @@
-# 🎵 Spotify Data Pipeline 🚀
+# AWS Cloud ETL Architecture for Spotify API Data Pipeline
 
-## 📖 Overview
-This project builds a **data pipeline for Spotify** using `AWS Glue`, `Apache Spark`, `Snowflake`, and `Power BI`. The goal is to extract **music streaming data** from the **Spotify API**, process it, and store it in **AWS S3** before loading it into **Snowflake** for analytics.
-
----
-
-## 🏗️ Architecture Diagram
-```plaintext
-Spotify API → Amazon CloudWatch → Python (AWS Lambda) → AWS EMR → AWS S3 → AWS Glue (Apache Spark) → Trigger → S3 (Transformed Data) → Snowpipe → Snowflake → Power BI
-
-```
-
-## Workflow Explanation
-- 1️⃣ Extract Data from Spotify API using AWS Lambda (Python script).
-- 2️⃣ Schedule Extraction with Amazon CloudWatch (daily trigger).
-- 3️⃣ Store Raw Data in Amazon S3 (JSON format).
-- 4️⃣ Transform Data using Apache Spark on AWS Glue.
-- 5️⃣ Trigger S3 Data Processing when new data arrives.
-- 6️⃣ Load Transformed Data into Snowflake via Snowpipe.
-- 7️⃣ Analyze Data using Power BI for visualization.
+## **Overview**
+This architecture extracts, transforms, and loads (ETL) data from the **Spotify API** into AWS, enabling SQL-based analytics using **Amazon Athena**. It automates data ingestion and transformation using **AWS Lambda, S3, Glue, and CloudWatch**.
 
 ---
 
-## 🎯 Key Features
-- ✅ Automated daily data extraction using AWS Lambda & CloudWatch.
-- ✅ Scalable ETL Pipeline using Apache Spark on AWS Glue.
-- ✅ Data storage in Amazon S3 (Raw + Transformed data).
-- ✅ Data Warehouse Integration with Snowflake via Snowpipe.
-- ✅ Visualization with Power BI for analytics & insights.
+## **Step-by-Step ETL Process**
 
-## 🛠️ Technologies Used
-- Python (AWS Lambda)
-- Apache Spark (PySpark)
-- AWS Glue & AWS EMR
-- Amazon S3
-- Snowflake & Snowpipe
-- Power BI
+### **1. Extraction Phase**
+- **Spotify API**: The pipeline fetches raw music data (e.g., track details, artist info) from the **Spotify API**.
+- **AWS Lambda (Data Extraction)**: 
+  - A Python-based AWS Lambda function extracts data from the API.
+  - It runs on a **daily schedule** triggered by **Amazon CloudWatch**.
+- **Amazon S3 (Raw Data Storage)**:
+  - The extracted raw data is stored in an **Amazon S3 bucket** for further processing.
 
 ---
 
-## Project Structure
+### **2. Transformation Phase**
+- **AWS Lambda (Data Transformation)**:
+  - Another Lambda function processes the raw data, **cleaning and transforming** it into a structured format (e.g., JSON, Parquet).
+- **Amazon S3 (Transformed Data Storage)**:
+  - The transformed data is then stored in a **separate S3 bucket**.
+- **Trigger (Object Put Event)**:
+  - A trigger is set up to **automatically process new files** uploaded to the raw S3 bucket.
 
-```
-spotify-data-pipeline/
-│── scripts/
-│   ├── extract_spotify_data.py  # Fetches data from Spotify API
-│   ├── process_spotify_data.py  # Runs ETL on AWS Glue / EMR
-│   ├── config.py                # Stores API keys and AWS credentials
-│── data/
-│   ├── raw/                     # Raw Spotify data in JSON/CSV format
-│   ├── processed/               # Transformed data (Parquet/CSV)
-│── notebooks/
-│   ├── exploratory_analysis.ipynb  # Jupyter Notebook for analysis
-│── README.md                     # Project Documentation
-│── requirements.txt               # Python dependencies
-│── .gitignore                     # Files to ignore in GitHub repo
+---
 
-```
+### **3. Load Phase**
+- **AWS Glue Crawler**:
+  - This service scans the transformed data in S3 and **infers the schema**.
+  - It updates the metadata catalog, making data easily accessible for queries.
+- **AWS Glue Data Catalog**:
+  - Stores metadata and **schema definitions** for structured access.
+- **Amazon Athena (Analytics)**:
+  - A **serverless query engine** that enables SQL-based analysis of the processed data.
 
-## 📢 Future Enhancements
-- ✅ Integrate real-time streaming with Kafka.
-- ✅ Add Airflow for job orchestration.
-- ✅ Deploy a dashboard with Power BI / Tableau.
+---
+
+## **AWS Services Used**
+| Service | Purpose |
+|---------|---------|
+| **Spotify API** | External data source |
+| **AWS Lambda** | Data extraction and transformation |
+| **Amazon CloudWatch** | Triggers scheduled Lambda execution |
+| **Amazon S3** | Raw and transformed data storage |
+| **AWS Glue Crawler** | Infers schema from transformed data |
+| **AWS Glue Data Catalog** | Stores metadata for structured queries |
+| **Amazon Athena** | Enables SQL-based analytics on transformed data |
+
+---
+
+## **Architecture Diagram**
+Below is the architecture diagram representing the ETL workflow:
+
+![AWS ETL Architecture](sandbox:/mnt/data/hd_image.png)
+
+---
+
+## **Conclusion**
+This architecture automates the entire ETL process using **AWS serverless services**. It provides a **scalable, cost-efficient, and easily maintainable** solution for ingesting, transforming, and analyzing Spotify API data.
+
