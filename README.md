@@ -33,8 +33,6 @@ We designed the following **AWS-based ETL pipeline** to automate data extraction
    - **AWS Glue Data Catalog** stores metadata (column names, data types).
    - Use **Amazon Athena** to run **SQL queries** for data analysis.
 
-### **Architecture Diagram**
-![AWS ETL Architecture](sandbox:/mnt/data/hd_image.png)
 
 ---
 
