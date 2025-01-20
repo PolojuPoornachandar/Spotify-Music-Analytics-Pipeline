@@ -1,53 +1,87 @@
-# AWS Cloud ETL Architecture for Spotify API Data Pipeline
+# **Spotify ETL Data Pipeline - AWS Cloud Implementation**
 
-## **Overview**
-This architecture extracts, transforms, and loads (ETL) data from the **Spotify API** into AWS, enabling SQL-based analytics using **Amazon Athena**. It automates data ingestion and transformation using **AWS Lambda, S3, Glue, and CloudWatch**.
+## **Project Overview**
+Our client is passionate about the **music industry** and wants to analyze **music trends** using data from **Spotify**. The client aims to collect **weekly top global songs** from **Spotify Billboard** to understand:
+- Trending songs
+- Popular artists and composers
+- Trending albums
+- Music patterns over time
 
----
+### **Business Problem**
+The **Spotify Billboard** updates weekly, and our client wants to build a **large dataset over a year or two**. By analyzing this data, he can discover **patterns, trends, and insights** to create new music. 
 
-## **Step-by-Step ETL Process**
-
-### **1. Extraction Phase**
-- **Spotify API**: The pipeline fetches raw music data (e.g., track details, artist info) from the **Spotify API**.
-- **AWS Lambda (Data Extraction)**: 
-  - A Python-based AWS Lambda function extracts data from the API.
-  - It runs on a **daily schedule** triggered by **Amazon CloudWatch**.
-- **Amazon S3 (Raw Data Storage)**:
-  - The extracted raw data is stored in an **Amazon S3 bucket** for further processing.
+To achieve this, we are developing an **ETL (Extract, Transform, Load) pipeline** to automate weekly data collection, processing, and storage.
 
 ---
 
-### **2. Transformation Phase**
-- **AWS Lambda (Data Transformation)**:
-  - Another Lambda function processes the raw data, **cleaning and transforming** it into a structured format (e.g., JSON, Parquet).
-- **Amazon S3 (Transformed Data Storage)**:
-  - The transformed data is then stored in a **separate S3 bucket**.
-- **Trigger (Object Put Event)**:
-  - A trigger is set up to **automatically process new files** uploaded to the raw S3 bucket.
+## **Proposed AWS ETL Architecture**
+We designed the following **AWS-based ETL pipeline** to automate data extraction, transformation, and storage.
+
+### **ETL Process Steps**
+1. **Extract:**
+   - Extract **top global songs** from **Spotify API** using **AWS Lambda (Data Extraction)**.
+   - Use **Amazon CloudWatch** to trigger the Lambda function **weekly**.
+   - Store raw data in **Amazon S3 (Raw Data Storage)**.
+
+2. **Transform:**
+   - A trigger (**Object Put Event**) activates **AWS Lambda (Data Transformation)**.
+   - Transform raw data into structured format (e.g., **JSON, Parquet**).
+   - Store transformed data in **Amazon S3 (Transformed Data Storage)**.
+
+3. **Load:**
+   - **AWS Glue Crawler** scans transformed data and infers the schema.
+   - **AWS Glue Data Catalog** stores metadata (column names, data types).
+   - Use **Amazon Athena** to run **SQL queries** for data analysis.
+
+### **Architecture Diagram**
+![AWS ETL Architecture](sandbox:/mnt/data/hd_image.png)
 
 ---
 
-### **3. Load Phase**
-- **AWS Glue Crawler**:
-  - This service scans the transformed data in S3 and **infers the schema**.
-  - It updates the metadata catalog, making data easily accessible for queries.
-- **AWS Glue Data Catalog**:
-  - Stores metadata and **schema definitions** for structured access.
-- **Amazon Athena (Analytics)**:
-  - A **serverless query engine** that enables SQL-based analysis of the processed data.
+## **AWS Resources Used**
+### **1. AWS Lambda (Serverless Compute)**
+- Used for **data extraction** and **data transformation**.
+- Runs Python scripts for **API calls, data processing, and transformation**.
+
+### **2. Amazon S3 (Simple Storage Service)**
+- Stores **raw** and **transformed data**.
+- Acts as a **data lake** to hold structured and unstructured data.
+
+### **3. Amazon CloudWatch**
+- Triggers AWS Lambda on a **weekly schedule** to fetch data.
+- Monitors execution logs for debugging.
+
+### **4. AWS Glue Crawler**
+- Scans S3 **transformed data** and **infers schema** (columns, data types).
+- Generates metadata for querying.
+
+### **5. AWS Glue Data Catalog**
+- Stores metadata about the dataset.
+- Helps in structuring and organizing large datasets.
+
+### **6. Amazon Athena (SQL-Based Analytics)**
+- A **serverless SQL query service** to analyze data stored in S3.
+- Enables **trend analysis** and **data insights** without database setup.
 
 ---
 
-## **AWS Services Used**
-| Service | Purpose |
-|---------|---------|
-| **Spotify API** | External data source |
-| **AWS Lambda** | Data extraction and transformation |
-| **Amazon CloudWatch** | Triggers scheduled Lambda execution |
-| **Amazon S3** | Raw and transformed data storage |
-| **AWS Glue Crawler** | Infers schema from transformed data |
-| **AWS Glue Data Catalog** | Stores metadata for structured queries |
-| **Amazon Athena** | Enables SQL-based analytics on transformed data |
+## **Spotify API Data Extraction**
+Spotify API provides:
+- **Artists** (e.g., Ed Sheeran, Drake)
+- **Albums** (e.g., latest album releases)
+- **Tracks** (e.g., top weekly tracks)
+
+Our **Python app** connects to the **Spotify API** to **fetch data** and process it in **AWS Cloud**.
+
+---
+
+## **Future Improvements**
+- **Data Visualization** using **Amazon QuickSight**.
+- **Machine Learning Analysis** for trend prediction.
+- **Automate data quality checks** using AWS Lambda.
+- **Enhance metadata tracking** with AWS Glue.
+
+
 
 ---
 
