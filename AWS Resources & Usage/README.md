@@ -129,3 +129,114 @@ response = cloudwatch.put_metric_alarm(
 
 ---
 
+# AWS Lambda: A Complete Overview
+
+## What is AWS Lambda?
+AWS Lambda is a **serverless compute service** provided by AWS that allows you to run code **without provisioning or managing servers**. It automatically scales and only charges for the compute time consumed.
+
+### Key Features of AWS Lambda:
+- **Serverless**: No need to manage infrastructure.
+- **Event-driven**: Executes code in response to triggers (e.g., S3 file upload, API Gateway request).
+- **Auto-scaling**: Handles multiple concurrent executions.
+- **Cost-effective**: Only pay for execution time.
+- **Supports Multiple Languages**: Python, Node.js, Java, C#, Go, etc.
+- **Integrated with AWS Services**: Works with S3, DynamoDB, Kinesis, SNS, SQS, etc.
+
+---
+
+## How Data Engineers Use AWS Lambda
+
+Data Engineers often use AWS Lambda in **ETL pipelines**, **data streaming**, **event-driven workflows**, and **automation tasks**. Below are some key use cases:
+
+### 1. **Data Ingestion and Preprocessing**
+   - AWS Lambda can trigger when new data arrives in **Amazon S3**, **DynamoDB**, or **Kinesis Streams**.
+   - It can process, transform, and forward data to another storage or database.
+
+   **Example Use Case**:
+   - A new CSV file is uploaded to S3.
+   - AWS Lambda extracts and processes the data.
+   - The transformed data is stored in **Amazon Redshift** or **DynamoDB**.
+
+### 2. **Automating ETL Pipelines**
+   - AWS Lambda is used to orchestrate and automate Extract, Transform, and Load (ETL) tasks.
+   - It can trigger AWS Glue or process small datasets directly.
+
+   **Example Flow**:
+   - Extract: Read data from an S3 bucket or API.
+   - Transform: Process data (convert formats, clean data).
+   - Load: Store in Redshift, DynamoDB, or another data warehouse.
+
+### 3. **Real-time Data Processing with AWS Kinesis**
+   - AWS Lambda can process real-time streaming data from **Amazon Kinesis** or **Kafka**.
+   - It helps with tasks like filtering logs, detecting anomalies, and enriching data streams.
+
+   **Example Use Case**:
+   - Clickstream data is sent to AWS Kinesis.
+   - AWS Lambda processes user interactions and pushes insights to an S3 data lake.
+
+### 4. **Data Validation and Cleaning**
+   - AWS Lambda can validate incoming data and apply data quality rules.
+   - It can reject or log invalid data for further inspection.
+
+   **Example Use Case**:
+   - A JSON payload is sent to an API Gateway.
+   - AWS Lambda validates the data format and stores valid records in a database.
+
+### 5. **Trigger-Based Workflows**
+   - Lambda can integrate with AWS Step Functions for orchestrating complex workflows.
+   - It automates data pipelines with error handling and retries.
+
+   **Example Use Case**:
+   - A Lambda function extracts data from an API.
+   - If extraction is successful, another Lambda function processes and stores the data.
+   - If it fails, an SNS notification is sent to a monitoring team.
+
+### 6. **Scheduled Jobs and Automation**
+   - AWS Lambda can run periodic tasks using **Amazon EventBridge (CloudWatch)**.
+   - It is used for:
+     - Automating database backups.
+     - Cleaning up old files from S3.
+     - Running scheduled data quality checks.
+
+---
+
+## AWS Lambda Example Code (Python)
+Below is an **example Lambda function** that gets triggered when a new file is uploaded to an **S3 bucket** and logs the file name.
+
+```python
+import json
+import boto3
+
+def lambda_handler(event, context):
+    s3_client = boto3.client('s3')
+    
+    # Get bucket and object details from event
+    for record in event['Records']:
+        bucket_name = record['s3']['bucket']['name']
+        file_key = record['s3']['object']['key']
+        
+        print(f"New file uploaded: {file_key} in bucket {bucket_name}")
+    
+    return {
+        'statusCode': 200,
+        'body': json.dumps('File processed successfully!')
+    }
+
+```
+
+### Explanation:
+- Triggered by S3 events (when a file is uploaded).
+- Retrieves the bucket name and file name.
+- Prints/logs the filename for further processing.
+
+### Benefits of Using AWS Lambda for Data Engineering
+- **Reduces Infrastructure Overhead:** No need to manage servers.
+- **Cost-efficient:** Only pay for execution time.
+- **Event-driven Processing:** Easily integrates with AWS services.
+- **Scalable:** Automatically handles concurrent requests.
+- **Faster Development:** Focus on logic, not infrastructure.
+
+### When Not to Use AWS Lambda?
+- **Long-running processes (>15 min timeout)** → Use AWS Glue or EC2.
+- **Large data transformations** → Use EMR, Glue, or Fargate.
+- **High-frequency execution (>1000 requests per second)** → May become costly.
